@@ -12,7 +12,7 @@ type ConfigType = {
     map: { [key: string]: string };
 }
 
-axios.defaults.baseURL = 'http://localhost:3333';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 export function Config() {
     const tempConfigs: ConfigType[] = [];
