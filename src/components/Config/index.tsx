@@ -49,6 +49,7 @@ export function Config() {
                     method: 'post',
                     url: '/config/download',
                     data: { config : config },
+                    withCredentials: true,
                 }
             );
 
@@ -77,6 +78,7 @@ export function Config() {
                 {
                     method: 'post',
                     url: '/config/upload',
+                    withCredentials: true,
                     data: {
                         type: type,
                         file: base64

@@ -50,6 +50,7 @@ export function GenerateDRE() {
             const response = await axios(
                 {
                     method: 'post',
+                    withCredentials: true,
                     url: '/dre',
                     data: {
                         config: config,
