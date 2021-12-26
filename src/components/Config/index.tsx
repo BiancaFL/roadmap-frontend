@@ -20,20 +20,45 @@ export function Config() {
     const [configs, setConfigs] = useState(tempConfigs);
     const [selectedFiles, setSelectedFiles] = useState(tempFiles);
 
-        const a = selectedFiles[0] instanceof Blob;
-
     useEffect(() => {
-        const loadedConfigs = localStorage.getItem("configs");
-        if (loadedConfigs) {
-            setConfigs(JSON.parse(loadedConfigs));
+        try {
+            (async () => {
+                const response = await axios(
+                    {
+                        method: 'get',
+                        url: '/configs',
+                        withCredentials: true,
+                    }
+                );
+
+                const loadedConfigs = response?.data;
+
+                if (loadedConfigs) {
+                    setConfigs(loadedConfigs);
+                }
+            })();
+        } catch (error) {
+            console.log(error);
         }
     },[])
 
-    function handleDelete (item: string) {
-        const newState = configs.filter(el => {return (el.type !== item)});
-        setConfigs(newState);
-        localStorage.removeItem("configs");
-        localStorage.setItem("configs", JSON.stringify(newState)); 
+    async function handleDelete (item: string) {
+        try {
+            const response = await axios(
+                {
+                    method: 'delete',
+                    url: '/config',
+                    withCredentials: true,
+                    data: {
+                        configType: item,
+                    }
+                }
+            );
+
+            setConfigs(response.data);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async function handleDownload (type: string) {
