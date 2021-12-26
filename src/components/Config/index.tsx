@@ -48,7 +48,7 @@ export function Config() {
                 {
                     method: 'post',
                     url: '/config/download',
-                    data: { config : config },
+                    data: { configType : config },
                     withCredentials: true,
                 }
             );
