@@ -111,12 +111,7 @@ export function Config() {
                 }
             );
             
-            let configsStorage: string = localStorage.getItem("configs") || "[]";
-            const loadedConfigs = JSON.parse(configsStorage);
-            loadedConfigs.push(response.data);
-            localStorage.removeItem("configs");
-            localStorage.setItem("configs", JSON.stringify(loadedConfigs));
-            setConfigs(loadedConfigs);
+            setConfigs(response.data);
         } catch (error) {
             console.log(error);
         }

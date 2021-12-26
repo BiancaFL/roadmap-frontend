@@ -17,9 +17,24 @@ export function GenerateDRE() {
     const [configType, setConfigType] = useState("");
 
     useEffect(() => {
-        const loadedConfigs = localStorage.getItem("configs");
-        if (loadedConfigs) {
-            setConfigs(JSON.parse(loadedConfigs));
+        try {
+            (async () => {
+                const response = await axios(
+                    {
+                        method: 'get',
+                        url: '/configs',
+                        withCredentials: true,
+                    }
+                );
+
+                const loadedConfigs = response?.data;
+
+                if (loadedConfigs) {
+                    setConfigs(loadedConfigs);
+                }
+            })();
+        } catch (error) {
+            console.log(error);
         }
     },[])
 
@@ -40,10 +55,6 @@ export function GenerateDRE() {
         const files = event?.target?.files ? event?.target?.files : tempFiles;
         const file = files[0];
         
-        const configs = localStorage.getItem("configs") || "[]";
-        const parsedConfigs = JSON.parse(configs);
-        const config = parsedConfigs.find((c: Config)  => { return c.type === configType });
-
         const base64 = await convertBase64(file);
 
         try {
@@ -53,7 +64,7 @@ export function GenerateDRE() {
                     withCredentials: true,
                     url: '/dre',
                     data: {
-                        config: config,
+                        configType: configType,
                         rawBuffer: base64
                     }
                 }
@@ -73,7 +84,7 @@ export function GenerateDRE() {
             <div>
                 <p>Modelo:</p>
             </div>
-            <input id="fileInput" type="file" onChange={handleFileChange} multiple/>
+            <input id="fileInput" type="file" onChange={handleFileChange}/>
             <select onChange={handleChange} defaultValue="">
                 <option value="" disabled>Escolha um modelo de DE/PARA</option>
                 {                    
