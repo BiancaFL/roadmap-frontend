@@ -62,23 +62,18 @@ export function Config() {
     }
 
     async function handleDownload (type: string) {
-        const configsStorage: string = localStorage.getItem("configs") || "[]";
-        const configs = JSON.parse(configsStorage) as ConfigType[];
-        const config = configs.find(c => {return c.type === type})
-
-        console.log(config);
-
+      
         try {
             const response = await axios(
                 {
                     method: 'post',
                     url: '/config/download',
-                    data: { configType : config },
+                    data: { configType : type },
                     withCredentials: true,
                 }
             );
 
-            save(response, `file.xlsx`);
+            save(response, `${type}.xlsx`);
 
         } catch (error) {
             console.log(error);
@@ -94,7 +89,9 @@ export function Config() {
 
         setSelectedFiles(files);
  
-        const type = files[0].name;
+        let type = files[0].name;
+        type = type.split(".")[0];
+
 
         const base64 = await convertBase64(file);
 
